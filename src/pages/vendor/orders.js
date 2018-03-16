@@ -3,6 +3,8 @@ import { withRouter } from 'react-router-dom'
 import { compose, withProps } from 'recompose'
 import { connect } from 'react-redux'
 
+import Table from '../../components/table'
+
 const enhance = compose(
   withRouter,
   connect(({ data }, { match }) => ({
@@ -44,40 +46,73 @@ const enhance = compose(
 
 const Component = ({ vendor, orders }) => (
   <div>
-    <h2>{vendor.name}</h2>
-    {Object.entries(orders).map(([key, order]) => (
-      <div key={key} style={{ border: '1px solid #ccc', padding: '10px' }}>
-        User: {order.user.name}
-        <br />
-        <br />
-        Deals:
-        {order.dealItems.map(item => (
-          <div key={item.id}>
-            <strong>${item.price}</strong> {item.name}
-          </div>
+    <h2>Orders</h2>
+    <Table>
+      <thead>
+        <tr>
+          <td>Name</td>
+          <td>Items</td>
+          <td>Price</td>
+        </tr>
+      </thead>
+      <tbody>
+        {Object.entries(orders).map(([key, order]) => (
+          <tr key={key} style={{ border: '1px solid #ccc', padding: '10px' }}>
+            <td>{order.user.name}</td>
+            <td>
+              Deals:
+              {order.dealItems.length === 0 ? (
+                <div>
+                  <em>No Deals Purchased</em>
+                </div>
+              ) : (
+                <Table>
+                  <thead>
+                    <tr>
+                      <td>Name</td>
+                      <td>Price</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {order.dealItems.map(item => (
+                      <tr key={item.id}>
+                        <td>{item.name}</td>
+                        <td>${item.price}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              )}
+              <br />
+              Items:
+              {order.menuItems.length === 0 ? (
+                <div>
+                  <em>No Menu Items Purchased</em>
+                </div>
+              ) : (
+                <Table>
+                  <thead>
+                    <tr>
+                      <td>Name</td>
+                      <td>Price</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {order.menuItems.map(item => (
+                      <tr key={item.id}>
+                        <td>{item.name}</td>
+                        <td>${item.price}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              )}
+            </td>
+            <td>Total: ${order.price}</td>
+          </tr>
         ))}
-        {order.dealItems.length === 0 && (
-          <div>
-            <em>No Deals Purchased</em>
-          </div>
-        )}
-        <br />
-        Items:
-        {order.menuItems.map(item => (
-          <div key={item.id}>
-            <strong>${item.price}</strong> {item.name}
-          </div>
-        ))}
-        {order.menuItems.length === 0 && (
-          <div>
-            <em>No Menu Items Purchased</em>
-          </div>
-        )}
-        <br />
-        <br />
-        Total: ${order.price}
-      </div>
-    ))}
+      </tbody>
+    </Table>
   </div>
 )
 

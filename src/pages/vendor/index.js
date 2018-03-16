@@ -24,7 +24,7 @@ const Component = ({ vendor, children }) => (
     <Main>
       <Nav>
         <NavLink to={`/vendor/${vendor.id}/orders`}>Orders</NavLink>
-        <NavLink to={`/vendor/${vendor.id}/menu`}>Menu and Deals</NavLink>
+        <NavLink to={`/vendor/${vendor.id}/menu`}>Deals and Menu</NavLink>
         <NavLink to={`/vendor/${vendor.id}/analytics`}>Analytics</NavLink>
       </Nav>
       <Content>

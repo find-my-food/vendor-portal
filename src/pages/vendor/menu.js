@@ -3,6 +3,8 @@ import { Link, withRouter } from 'react-router-dom'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
 
+import Table from '../../components/table'
+
 const enhance = compose(
   withRouter,
   connect(({ data }, { match }) => ({
@@ -22,24 +24,78 @@ const enhance = compose(
 
 const Component = ({ children, vendor, menuItems, deals }) => (
   <div>
-    Deals:
-    {deals.map(item => (
-      <div key={item.id}>
-        {item.name}{' '}
-        <Link to={`/vendor/${vendor.id}/menu/deal/${item.id}/analytics`}>
-          Open Analytics
-        </Link>
-      </div>
-    ))}
-    Items:
-    {menuItems.map(item => (
-      <div key={item.id}>
-        {item.name}{' '}
-        <Link to={`/vendor/${vendor.id}/menu/item/${item.id}/analytics`}>
-          Open Analytics
-        </Link>
-      </div>
-    ))}
+    <h2>Deals</h2>
+    <Table>
+      <thead>
+        <tr>
+          <td>Name</td>
+          <td>Price</td>
+          <td>Items</td>
+          <td>Analytics</td>
+        </tr>
+      </thead>
+      <tbody>
+        {deals.map(item => (
+          <tr key={item.id}>
+            <td>{item.name}</td>
+            <td>${item.price}</td>
+            <td>
+              {item.menuItems.length === 0 ? (
+                <div>
+                  <em>No Items Listed</em>
+                </div>
+              ) : (
+                <Table>
+                  <thead>
+                    <tr>
+                      <td>Name</td>
+                      <td>Price</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {item.menuItems.map(item => (
+                      <tr key={item.id}>
+                        <td>{item.name}</td>
+                        <td>${item.price}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              )}
+            </td>
+            <td>
+              <Link to={`/vendor/${vendor.id}/menu/deal/${item.id}/analytics`}>
+                Open Analytics
+              </Link>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
+    <br />
+    <h2>Menu</h2>
+    <Table>
+      <thead>
+        <tr>
+          <td>Name</td>
+          <td>Price</td>
+          <td>Analytics</td>
+        </tr>
+      </thead>
+      <tbody>
+        {menuItems.map(item => (
+          <tr key={item.id}>
+            <td>{item.name}</td>
+            <td>${item.price}</td>
+            <td>
+              <Link to={`/vendor/${vendor.id}/menu/item/${item.id}/analytics`}>
+                Open Analytics
+              </Link>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
     {children}
   </div>
 )
