@@ -1,6 +1,6 @@
 {
   "name": "mobile-client",
-  "homepage": "https://find-my-food.github.io/mobile-client",
+  "homepage": "https://find-my-food.github.io/vendor-portal",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
