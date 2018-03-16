@@ -1,0 +1,16 @@
+:root {
+  --scale: 1;
+}
+html {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+body {
+  font-family: sans-serif;
+  background: #ffffff;
+  margin: 0;
+}
