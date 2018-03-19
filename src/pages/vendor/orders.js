@@ -4,6 +4,7 @@ import { compose, withProps } from 'recompose'
 import { connect } from 'react-redux'
 
 import Table from '../../components/table'
+import Button from '../../components/button'
 
 const enhance = compose(
   withRouter,
@@ -16,9 +17,15 @@ const enhance = compose(
         {
           ...item,
           user: data.users[item.userId],
-          menuItems: item.itemsPurchasedIds.map(
-            itemId => data.menuItems[itemId]
-          ),
+          menuItems: [
+            ...item.itemsPurchasedIds.map(itemId => data.menuItems[itemId]),
+            ...item.dealsPurchasedIds
+              .map(itemId => data.deals[itemId])
+              .map(item =>
+                item.menuItemIds.map(itemId => data.menuItems[itemId])
+              )
+              .reduce((a, b) => a.concat(b), [])
+          ],
           dealItems: item.dealsPurchasedIds
             .map(itemId => data.deals[itemId])
             .map(item => ({
@@ -53,6 +60,7 @@ const Component = ({ vendor, orders }) => (
           <td>Name</td>
           <td>Items</td>
           <td>Price</td>
+          <td />
         </tr>
       </thead>
       <tbody>
@@ -60,31 +68,6 @@ const Component = ({ vendor, orders }) => (
           <tr key={key} style={{ border: '1px solid #ccc', padding: '10px' }}>
             <td>{order.user.name}</td>
             <td>
-              Deals:
-              {order.dealItems.length === 0 ? (
-                <div>
-                  <em>No Deals Purchased</em>
-                </div>
-              ) : (
-                <Table>
-                  <thead>
-                    <tr>
-                      <td>Name</td>
-                      <td>Price</td>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {order.dealItems.map(item => (
-                      <tr key={item.id}>
-                        <td>{item.name}</td>
-                        <td>${item.price}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              )}
-              <br />
-              Items:
               {order.menuItems.length === 0 ? (
                 <div>
                   <em>No Menu Items Purchased</em>
@@ -109,6 +92,9 @@ const Component = ({ vendor, orders }) => (
               )}
             </td>
             <td>Total: ${order.price}</td>
+            <td>
+              <Button>Complete</Button>
+            </td>
           </tr>
         ))}
       </tbody>
